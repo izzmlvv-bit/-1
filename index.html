@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Измайлова Арина | Портфолио</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- Сброс и база ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fafafa;
+            font-family: 'Cormorant Garamond', serif;
+            color: #1e1e1e;
+            padding: 24px 20px 40px;
+        }
+
+        /* ----- Шапка ----- */
+        .header {
+            text-align: center;
+            padding: 10px 0 30px;
+            letter-spacing: 2px;
+        }
+        .header h1 {
+            font-weight: 300;
+            font-size: 28px;
+            font-style: italic;
+            border-bottom: 1px solid #d0d0d0;
+            display: inline-block;
+            padding-bottom: 8px;
+            padding-left: 12px;
+            padding-right: 12px;
+            color: #2c2c2c;
+        }
+        .header h1 span {
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* ----- Галерея ----- */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .gallery__item {
+            flex: 1 0 auto;
+            width: calc(25% - 6px);
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .gallery__item img {
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery__item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Адаптив галереи */
+        @media (max-width: 1200px) {
+            .gallery { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .gallery { grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(120px, auto); }
+            .gallery__item:nth-child(1) { grid-column: span 1; grid-row: span 1; }
+            .gallery__item:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+            .gallery__item:nth-child(3) { grid-column: span 1; grid-row: span 2; }
+            .gallery__item:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+            .gallery__item:nth-child(5) { grid-column: span 1; grid-row: span 1; }
+            .gallery__item:nth-child(6) { grid-column: span 2; grid-row: span 1; }
+        }
+        @media (max-width: 600px) {
+            .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(100px, auto); }
+            .gallery__item:nth-child(1) { grid-column: span 1; grid-row: span 1; }
+            .gallery__item:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+            .gallery__item:nth-child(3) { grid-column: span 1; grid-row: span 2; }
+            .gallery__item:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+            .gallery__item:nth-child(5) { grid-column: span 1; grid-row: span 1; }
+            .gallery__item:nth-child(6) { grid-column: span 2; grid-row: span 1; }
+        }
+        @media (max-width: 400px) {
+            .gallery { grid-template-columns: 1fr; grid-auto-rows: minmax(150px, auto); }
+            .gallery__item { grid-column: span 1 !important; grid-row: span 1 !important; }
+        }
+
+        /* ----- Модальное окно ----- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.25s ease;
+        }
+        .modal.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal__content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 40, 40, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            padding: 12px;
+            animation: scaleIn 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal__close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
+            font-weight: 300;
+            color: #eee;
+            cursor: pointer;
+            z-index: 10;
+            transition: color 0.2s, background 0.2s;
+            line-height: 1;
+            font-family: 'Cormorant Garamond', serif;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0 8px;
+            border-radius: 6px;
+            user-select: none;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal__close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ----- Контейнер сравнения ----- */
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            flex: 1;
+            min-height: 0;
+            justify-content: center;
+            align-items: stretch;
+            padding: 4px;
+        }
+
+        .comparison__col {
+            flex: 1 1 40%;
+            min-width: 200px;
+            min-height: 0;
+            max-height: 100%;
+            position: relative;
+            background: rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        /* Обёртка для изображения с overflow hidden */
+        .comparison__image-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+            touch-action: none; /* отключаем стандартные жесты */
+        }
+        .comparison__image-wrapper.dragging {
+            cursor: grabbing;
+        }
+
+        .comparison__image-wrapper img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            transform-origin: center center;
+            pointer-events: none; /* чтобы события мыши шли на обёртку */
+            transition: none;
+        }
+
+        /* Подписи */
+        .comparison__col .comparison__label {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            padding: 4px 14px;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ----- Навигация в модалке ----- */
+        .modal__nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 40px;
+            font-weight: 300;
+            color: #eee;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+            z-index: 10;
+            line-height: 1;
+            user-select: none;
+        }
+        .modal__nav:hover {
+            background: rgba(255, 255, 255, 0.35);
+            color: #fff;
+        }
+        .modal__nav--prev { left: 8px; }
+        .modal__nav--next { right: 8px; }
+
+        /* ----- Управление зумом ----- */
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 8px 4px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 8px 8px;
+            backdrop-filter: blur(2px);
+            user-select: none;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .zoom-controls__btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 300;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            color: #eee;
+            backdrop-filter: blur(4px);
+        }
+        .zoom-controls__btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .zoom-controls__slider {
+            width: 160px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            height: 4px;
+            border-radius: 2px;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+        .zoom-controls__slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .zoom-controls__slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .zoom-controls__value {
+            font-size: 14px;
+            font-weight: 400;
+            color: #eee;
+            min-width: 44px;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* ----- Адаптив модалки ----- */
+        @media (max-width: 700px) {
+            .modal__content {
+                max-width: 96vw;
+                padding: 8px;
+            }
+            .modal__close {
+                font-size: 24px;
+                top: 8px;
+                right: 12px;
+            }
+            .modal__nav {
+                font-size: 30px;
+                padding: 4px 8px;
+            }
+            .modal__nav--prev { left: 4px; }
+            .modal__nav--next { right: 4px; }
+            .zoom-controls__slider {
+                width: 100px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .comparison {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                max-height: none;
+            }
+            .comparison__col {
+                flex: 1;
+                min-width: 0;
+                max-height: none;
+                padding: 4px;
+            }
+            .comparison__image-wrapper {
+                height: 100%;
+            }
+        }
+
+        /* ----- Нижний колонтитул ----- */
+        .footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 14px;
+            color: #aaa;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>Измайлова Арина <span>|</span> Портфолио</h1>
+    </header>
+
+    <!-- Галерея -->
+    <div class="gallery" id="gallery">
+        <div class="gallery__item" data-after="images/1after.jpg" data-before="images/1before.jpg">
+            <img src="images/1after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/2after.jpg" data-before="images/2before.jpg">
+            <img src="images/2after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/3after.jpg" data-before="images/3before.jpg">
+            <img src="images/3after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/4after.jpg" data-before="images/4before.jpg">
+            <img src="images/4after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/5after.jpg" data-before="images/5before.jpg">
+            <img src="images/5after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/6after.jpg" data-before="images/6before.jpg">
+            <img src="images/6after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/7after.jpg" data-before="images/7before.jpg">
+            <img src="images/7after.jpg" alt="" />
+        </div>
+        <div class="gallery__item" data-after="images/8after.jpg" data-before="images/8before.jpg">
+            <img src="images/8after.jpg" alt="" />
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="modal">
+        <div class="modal__content" id="modalContent">
+            <span class="modal__close" id="modalClose">&times;</span>
+
+            <!-- Блок сравнения -->
+            <div class="comparison" id="comparison">
+                <div class="comparison__col comparison__col--before">
+                    <div class="comparison__image-wrapper" id="beforeWrapper">
+                        <img id="beforeImg" src="" alt="До" />
+                    </div>
+                    <span class="comparison__label">до</span>
+                </div>
+                <div class="comparison__col comparison__col--after">
+                    <div class="comparison__image-wrapper" id="afterWrapper">
+                        <img id="afterImg" src="" alt="После" />
+                    </div>
+                    <span class="comparison__label">после</span>
+                </div>
+            </div>
+
+            <!-- Элементы управления зумом -->
+            <div class="zoom-controls">
+                <button class="zoom-controls__btn" id="zoomMinus" title="Уменьшить">−</button>
+                <input type="range" class="zoom-controls__slider" id="zoomSlider"
+                min="1" max="4" step="0.01" value="1" />
+                <button class="zoom-controls__btn" id="zoomPlus" title="Увеличить">+</button>
+                <span class="zoom-controls__value" id="zoomValue">100%</span>
+            </div>
+
+            <!-- Навигация -->
+            <button class="modal__nav modal__nav--prev" id="prevBtn">‹</button>
+            <button class="modal__nav modal__nav--next" id="nextBtn">›</button>
+        </div>
+    </div>
+
+    <footer class="footer">ретушь &amp; обработка | +7 900 014-29-81 | tg: @nuvotl | izmaylova.arina.69@mail.ru</footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // DOM-элементы
+            const gallery = document.getElementById('gallery');
+            const modal = document.getElementById('modal');
+            const closeBtn = document.getElementById('modalClose');
+            const afterImg = document.getElementById('afterImg');
+            const beforeImg = document.getElementById('beforeImg');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const zoomSlider = document.getElementById('zoomSlider');
+            const zoomValue = document.getElementById('zoomValue');
+            const zoomMinus = document.getElementById('zoomMinus');
+            const zoomPlus = document.getElementById('zoomPlus');
+            const beforeWrapper = document.getElementById('beforeWrapper');
+            const afterWrapper = document.getElementById('afterWrapper');
+
+            const items = Array.from(gallery.querySelectorAll('.gallery__item'));
+            let currentIndex = 0;
+            let currentZoom = 1;
+            let panX = 0;
+            let panY = 0;
+
+            // Применение зума и панорамирования к обоим изображениям
+            function applyTransform(zoom, dx, dy) {
+                currentZoom = Math.min(4, Math.max(1, zoom));
+                panX = dx || 0;
+                panY = dy || 0;
+                const transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + currentZoom + ')';
+                beforeImg.style.transform = transform;
+                afterImg.style.transform = transform;
+                zoomSlider.value = currentZoom;
+                zoomValue.textContent = Math.round(currentZoom * 100) + '%';
+            }
+
+            // Сброс панорамирования и зума
+            function resetView() {
+                applyTransform(1, 0, 0);
+            }
+
+            // Открытие модального окна по индексу
+            function openModalByIndex(index) {
+                if (index < 0 || index >= items.length) return;
+                const item = items[index];
+                const after = item.dataset.after;
+                const before = item.dataset.before;
+                if (after && before) {
+                    afterImg.src = after;
+                    beforeImg.src = before;
+                } else {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        afterImg.src = img.src;
+                        beforeImg.src = img.src;
+                    }
+                }
+                currentIndex = index;
+                resetView();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                // сброс состояния перетаскивания
+                if (isDragging) {
+                    isDragging = false;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    document.removeEventListener('touchmove', onTouchMove);
+                    document.removeEventListener('touchend', onTouchEnd);
+                    beforeWrapper.classList.remove('dragging');
+                    afterWrapper.classList.remove('dragging');
+                }
+            }
+
+            function prevItem() {
+                const newIndex = (currentIndex - 1 + items.length) % items.length;
+                openModalByIndex(newIndex);
+            }
+
+            function nextItem() {
+                const newIndex = (currentIndex + 1) % items.length;
+                openModalByIndex(newIndex);
+            }
+
+            // ----- Обработчики -----
+
+            // Клик по галерее
+            gallery.addEventListener('click', function(e) {
+                const item = e.target.closest('.gallery__item');
+                if (!item) return;
+                const index = items.indexOf(item);
+                if (index !== -1) openModalByIndex(index);
+            });
+
+            // Закрытие по клику на фон
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+
+            closeBtn.addEventListener('click', closeModal);
+
+            // Навигация
+            prevBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                prevItem();
+            });
+
+            nextBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                nextItem();
+            });
+
+            // Клавиатура
+            document.addEventListener('keydown', function(e) {
+                if (!modal.classList.contains('active')) return;
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevItem();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextItem();
+                }
+            });
+
+            // ----- Управление зумом -----
+
+            // Слайдер
+            zoomSlider.addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                // при изменении зума сбрасываем панорамирование
+                applyTransform(val, 0, 0);
+            });
+
+            // Кнопка "-"
+            zoomMinus.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const newZoom = Math.max(1, currentZoom - 0.1);
+                applyTransform(Math.round(newZoom * 100) / 100, 0, 0);
+            });
+
+            // Кнопка "+"
+            zoomPlus.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const newZoom = Math.min(4, currentZoom + 0.1);
+                applyTransform(Math.round(newZoom * 100) / 100, 0, 0);
+            });
+
+            // Колёсико мыши для зума (в модалке)
+            modal.addEventListener('wheel', function(e) {
+                if (!modal.classList.contains('active')) return;
+                const target = e.target;
+                if (target.closest('.comparison__image-wrapper') || target.closest('.zoom-controls')) {
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                    const newZoom = Math.min(4, Math.max(1, currentZoom + delta));
+                    // при зуме колесом тоже сбрасываем панорамирование
+                    applyTransform(Math.round(newZoom * 100) / 100, 0, 0);
+                }
+            }, { passive: false });
+
+            // ----- Панорамирование (перетаскивание) -----
+
+            let isDragging = false;
+            let startX, startY, startPanX, startPanY;
+
+            function onMouseDown(e) {
+                if (!modal.classList.contains('active')) return;
+                // только если зум > 1, иначе панорамирование не имеет смысла
+                if (currentZoom <= 1) return;
+                const wrapper = e.currentTarget;
+                isDragging = true;
+                const clientX = e.clientX;
+                const clientY = e.clientY;
+                startX = clientX;
+                startY = clientY;
+                startPanX = panX;
+                startPanY = panY;
+                wrapper.classList.add('dragging');
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                e.preventDefault();
+            }
+
+            function onMouseMove(e) {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                const newPanX = startPanX + dx;
+                const newPanY = startPanY + dy;
+                // применяем без изменения зума
+                applyTransform(currentZoom, newPanX, newPanY);
+                e.preventDefault();
+            }
+
+            function onMouseUp(e) {
+                if (isDragging) {
+                    isDragging = false;
+                    beforeWrapper.classList.remove('dragging');
+                    afterWrapper.classList.remove('dragging');
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+            }
+
+            // Touch события
+            function onTouchStart(e) {
+                if (!modal.classList.contains('active')) return;
+                if (currentZoom <= 1) return;
+                const touch = e.touches[0];
+                if (!touch) return;
+                const wrapper = e.currentTarget;
+                isDragging = true;
+                startX = touch.clientX;
+                startY = touch.clientY;
+                startPanX = panX;
+                startPanY = panY;
+                wrapper.classList.add('dragging');
+                document.addEventListener('touchmove', onTouchMove, { passive: false });
+                document.addEventListener('touchend', onTouchEnd, { passive: false });
+                e.preventDefault();
+            }
+
+            function onTouchMove(e) {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                if (!touch) return;
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+                const newPanX = startPanX + dx;
+                const newPanY = startPanY + dy;
+                applyTransform(currentZoom, newPanX, newPanY);
+                e.preventDefault();
+            }
+
+            function onTouchEnd(e) {
+                if (isDragging) {
+                    isDragging = false;
+                    beforeWrapper.classList.remove('dragging');
+                    afterWrapper.classList.remove('dragging');
+                    document.removeEventListener('touchmove', onTouchMove);
+                    document.removeEventListener('touchend', onTouchEnd);
+                }
+            }
+
+            // Навешиваем обработчики на оба враппера
+            beforeWrapper.addEventListener('mousedown', onMouseDown);
+            afterWrapper.addEventListener('mousedown', onMouseDown);
+            beforeWrapper.addEventListener('touchstart', onTouchStart, { passive: false });
+            afterWrapper.addEventListener('touchstart', onTouchStart, { passive: false });
+
+            // Инициализация
+            modal.classList.remove('active');
+        })();
+    </script>
+</body>
+</html>
